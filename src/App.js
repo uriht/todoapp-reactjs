@@ -1,6 +1,7 @@
 // import logo from './logo.svg';
 import {useState} from 'react';
 import './App.css';
+import {Task} from './Task';
 
 function App() {
     //Declarations
@@ -16,9 +17,13 @@ function App() {
             id: todoList.length === 0
                 ? 1
                 : todoList[todoList.length - 1].id + 1,
-            taskName: newTask
+            taskName: newTask,
+            completed: false
         };
-        setTask([...todoList, taskObj]);
+        setTask([
+            ...todoList,
+            taskObj
+        ]);
     }
     console.log(todoList)
     // Delete the Task
@@ -30,24 +35,42 @@ function App() {
         })
         setTask(newTodo);
     }
+    // Marking it as Complete
+    const markComplete = (id) => {
+        todoList.map((task) => {
+            if (task.id === id) {
+                return {
+                    ...task,
+                    completed: true
+                };
+            } else {
+                return task;
+            }
+        })
+    }
 
-    //Render-return
+    //Rendering
     return (
 
         <div className='App'>
             {/* Adding Task Here */}
             <div className='AddTaskHere'>
-                <input onChange={handleChange}/>
-                <button onClick={addTask2List}>Add Task</button>
+                <h1>Uriht Todo List</h1>
+                <input className='inputbox' onChange={handleChange}/>
+                <button className='addbtn' onClick={addTask2List} role="button">Add Task</button>
             </div>
             {/* Displaying Task Here */}
             <div className='DisplayTaskHere'>
                 {
                     todoList.map((task) => {
-                        return <div>
-                            <h3>{task.taskName}</h3>
-                            <button onClick={() => deleteTask(task.id)}>X</button>
-                        </div>
+                        return (
+                            <Task
+                                taskName={task.taskName}
+                                id={task.id}
+                                deleteTask={deleteTask}
+                                markComplete={markComplete}
+                                completed={task.completed}/>
+                        )
 
                     })
                 }
